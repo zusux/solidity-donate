@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>捐款- Dapp</title>
+    <link rel="stylesheet" href="https://www.layuicdn.com/layui/css/layui.css">
+</head>
+<body>
+
+<div class="layui-container">
+    <div class="layui-row layui-col-space30">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+            <h1>以太坊捐款程序示例</h1>
+            <h3 style="padding-top:20px;">共收到: <span style="color:red;" id="accountView"></span>(wei)</h3>
+        </div>
+        <div class="layui-col-xs5 layui-col-sm5 layui-col-md5">
+            <div class="layui-tab layui-tab-card">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">捐款列表</li>
+                    <li>注册用户</li>
+                </ul>
+                <div class="layui-tab-content" style="height: 600px; overflow-y: auto">
+                    <div class="layui-tab-item layui-show">
+                        <ul class="layui-timeline" id="donateView">
+                        </ul>
+                    </div>
+                    <div class="layui-tab-item">
+                        <ul class="layui-timeline" id="userView">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-col-xs7 layui-col-sm7 layui-col-md7">
+            <div class="layui-col-space15" style="margin-top:10px;">
+                <div class="layui-panel">
+                    <div style="padding: 10px;">
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">我的以太</label>
+                                <div class="layui-form-label" style="width: 200px;">
+                                    <strong class="balance">loading...</strong>
+                                    <span>(ETH)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="padding: 10px;">
+                        <div class="layui-form-item">
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label">姓名</label>
+                                <div class="layui-input-inline" style="width: 200px;">
+                                    <input type="text" id="name" name="name" placeholder="姓名/昵称/单位" class="layui-input">
+                                </div>
+                                <div class="layui-form-mid"></div>
+                                <div class="layui-input-inline" style="width: 100px;">
+                                    <button id="setName" class="layui-btn" lay-submit lay-filter="formDemo"
+                                            onclick="App.setName()">设置名称
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label">以太币</label>
+                                <div class="layui-input-inline" style="width: 200px;">
+                                    <input type="text" id="amount" name="amount" placeholder="wei" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+                                <div class="layui-form-mid"></div>
+                                <div class="layui-input-inline" style="width: 100px;">
+                                    <button id="donate" class="layui-btn" lay-submit lay-filter="formDemo"
+                                            onclick="App.sendCoin()">捐　　赠
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script>
+    function Format(sj) {
+        var now = new Date(sj * 1000);
+        var year = now.getFullYear();
+        var month = now.getMonth() + 1;
+        var date = now.getDate();
+        var hour = now.getHours();
+        var minute = now.getMinutes();
+        var second = now.getSeconds();
+        return year + "-" + month + "-" + date + "   " + hour + ":" + minute + ":" + second;
+    }
+</script>
+
+<script src="https://www.layuicdn.com/layui/layui.js"></script>
+<script src="index.js"></script>
+<script id="donateTpl" type="text/html">
+    <h3 style="font-weight: bold; padding-bottom:15px;">{{d.title}}</h3>
+    {{#  layui.each(d.list, function(index, item){ }}
+    <li class="layui-timeline-item">
+        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+        <div class="layui-timeline-content layui-text">
+            <h4 class="layui-timeline-title">{{ Format(item.donation_at) }}</h4>
+            <p>以太: {{ item.amount }} wei</p>
+            <p>捐赠者: {{item.user.name || '匿名'}}</p>
+        </div>
+    </li>
+    {{#  }); }}
+    {{#  if(d.list.length === 0){ }}
+    无数据
+    {{#  } }}
+</script>
+<script id="userTpl" type="text/html">
+    <h3 style="font-weight: bold; padding-bottom:15px;">{{d.title}}</h3>
+    {{#  layui.each(d.list, function(index, item){ }}
+    <li class="layui-timeline-item">
+        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+        <div class="layui-timeline-content layui-text">
+            <p>姓名: {{item.name || '匿名'}} [{{ Format(item.create_at) }}]</p>
+        </div>
+    </li>
+    {{#  }); }}
+    {{#  if(d.list.length === 0){ }}
+    无数据
+    {{#  } }}
+</script>
+</html>
